@@ -1,3 +1,4 @@
+//Creating a class for anime with title and studio attributes
 class Anime {
     constructor(title, studio) {
         this.title = title;
@@ -5,6 +6,7 @@ class Anime {
     }
 }
 
+//Class for Seasons with attributes for id, name, and an array for anime
 class Season {
     constructor(id, name) {
         this.id = id;
@@ -12,34 +14,46 @@ class Season {
         this.animes = [];
     }
 
+    // Method allows adding anime to animes array in seasons
     addMember(anime) {
         this.animes.push(anime);
     }
 
+    // Method allows deleting anime from animes array in seasons
     deleteMember(anime) {
         let index = this.animes.indexOf(anime);
         this.animes.splice(index, 1);
     }
 }
 
+//Array for adding new seasons into
 let seasons = [];
+//Setting initial season ID to 0
 let seasonId = 0;
 
+//Uses the onClick function to add the click event listener to the add-season button and lets that
+//button create new seasons. Then uses the drawDOM fuction to redraw our Seasons table. When creating
+//the new season, it will assign a season ID and grab the season name from the new-anime-season input
 onClick('add-season', () => {
     seasons.push(new Season(seasonId++, getValue('new-anime-season')));
     drawDOM();
 });
 
+//Functions allows easily adding the click event listener to elements
 function onClick(id, action) {
     let element = document.getElementById(id);
     element.addEventListener('click', action);
     return element;
 }
 
+//Function pulls the value from an element after locating the element by ID
 function getValue(id) {
     return document.getElementById(id).value;
 }
 
+//Function clears out our anime-seasons div which houses our table. On redraw it will cycle
+//through the seasons array and create a titled table for each season with a delete season button
+//and inputs (form and button) for adding a new Anime to each season
 function drawDOM() {
     let seasonDiv = document.getElementById('anime-seasons');
     clearElement(seasonDiv);
@@ -56,6 +70,7 @@ function drawDOM() {
     }
 }
 
+//Function creates rows for each anime and inserts the anime's title, studio, and a delete button
 function createAnimeRow(season, table, anime) {
     let row = table.insertRow(2);
     row.insertCell(0).innerHTML = anime.title;
@@ -64,6 +79,7 @@ function createAnimeRow(season, table, anime) {
     actions.appendChild(createDeleteAnimeButton(season, anime));
 }
 
+//Creates a button that will remove that row's anime by splicing it from that seasons animes array
 function createDeleteAnimeButton(season, anime) {
     let btn = document.createElement('button');
     btn.className = 'btn btn-primary';
@@ -76,10 +92,11 @@ function createDeleteAnimeButton(season, anime) {
     return btn;
 }
 
+//Function creates a button that will delete a season from the season's array
 function createDeleteSeasonButton(season) {
     let btn = document.createElement('button');
     btn.className = 'btn btn-primary';
-    btn.innerHTML = 'Delete Team';
+    btn.innerHTML = 'Delete Season';
     btn.onclick = () => {
         let index = seasons.indexOf(season);
         seasons.splice(index, 1);
@@ -88,10 +105,12 @@ function createDeleteSeasonButton(season) {
     return btn;
 }
 
+//Function creates a button that uses the title and studio inputs and creates a new Anime object
+//to push the the seasons's animes array
 function createNewAnimeButton(season) {
     let btn = document.createElement('button');
     btn.className = 'btn btn-primary';
-    btn.innerHTML = 'Add Member';
+    btn.innerHTML = 'Add Anime';
     btn.onclick = () => {
         season.animes.push(new Anime(getValue(`title-input-${season.id}`), getValue(`studio-input-${season.id}`)));
         drawDOM();
@@ -99,6 +118,9 @@ function createNewAnimeButton(season) {
     return btn;
 }
 
+//Function allows the drawDOM function to draw the actual table. Establishes the attributes for the table,
+//creates the elements that make up the table, inserts them, and returns them to the drawDOM function to be
+//added to the seasonDiv
 function createSeasonTable(season) {
     let table = document.createElement('table');
     table.setAttribute('class', 'table table-dark table-striped');
@@ -131,6 +153,8 @@ function createSeasonTable(season) {
     return table;
 }
 
+//Allows the drawDOM function to clear the current table. Will proceed to remove elements
+//until there is no longer a firstChild
 function clearElement(element) {
     while (element.firstChild) {
         element.removeChild(element.firstChild);
